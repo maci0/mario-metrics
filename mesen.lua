@@ -137,6 +137,8 @@ end
 
 function main()
    --  if emu.read(0x0770, emu.memType.cpu) == gameState.normal then
+   --  only allow 1 life
+   emu.write(memory.lives, 0x00, emu.memType.cpu)
    gameLoop()
    --end
 end
@@ -145,6 +147,7 @@ function gameLoop()
    timer = tonumber(tostring( emu.read(0x07F8, emu.memType.cpu) .. emu.read(0x07F9, emu.memType.cpu) .. emu.read(0x07FA, emu.memType.cpu)))
 
    lives = tonumber(tostring(emu.read(memory.lives, emu.memType.cpu))) + 1
+   
    local demoTextAddress = 0x2007
 
    local cooltext = { 0x2E, 0x28, 0x17, 0x0E, 0x20, 0x24, 0x1B, 0x0E, 0x15, 0x12, 0x0C, 0x24, 0x0D, 0x0E, 0x16, 0x18, 0x28, 0x2E }
