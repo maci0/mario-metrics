@@ -46,7 +46,7 @@ local level = 0
 local timer = 0
 local collectedCoins = 0
 local state = 0
-local lives = 3
+local lives = 1
 
 function httpGet(host, port, path)
    local tcp = socket.tcp()
@@ -71,7 +71,7 @@ function urlencode(url)
      return
    end
    url = url:gsub("\n", "\r\n")
-   url = url:gsub("([^%w ])", char_to_hex)
+   url = url:gsub("([^%w _ %- . ~])", char_to_hex)
    url = url:gsub(" ", "+")
    return url
  end
@@ -92,7 +92,7 @@ function sendEvent(event)
 end
 
 function playerStateCallback(address, value)
-   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+   if emu.read(memory.gameState, emu.memType.cpu) ~= gameState.normal and not demoMode then
       return
    end
 
@@ -136,11 +136,9 @@ function playerStateCallback(address, value)
 end
 
 function main()
-   --  if emu.read(0x0770, emu.memType.cpu) == gameState.normal then
    --  only allow 1 life
    emu.write(memory.lives, 0x00, emu.memType.cpu)
    gameLoop()
-   --end
 end
 
 function gameLoop()
@@ -163,11 +161,10 @@ function gameLoop()
    emu.write(0x2046, 0x0C, emu.memType.ppu)
    emu.write(0x2047, 0x0E, emu.memType.ppu)
    emu.write(0x2048, 0x15, emu.memType.ppu)
-
 end
 
 function coinCollectCallback(address, value)
-   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+   if emu.read(memory.gameState, emu.memType.cpu) ~= gameState.normal and not demoMode then
       return
    end
 
@@ -184,7 +181,7 @@ function coinCollectCallback(address, value)
 end
 
 function timerCallback(address, value)
-   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+   if emu.read(memory.gameState, emu.memType.cpu) ~= gameState.normal and not demoMode then
       return
    end
 
@@ -213,7 +210,7 @@ function timerCallback(address, value)
 end
 
 function starTimerCallback(address, value)
-   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+   if emu.read(memory.gameState, emu.memType.cpu) ~= gameState.normal and not demoMode then
       return
    end
 
