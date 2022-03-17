@@ -1,19 +1,21 @@
 ﻿local socket = require("socket.core")
 
 local playerId = os.getenv("PLAYEREMAIL")
+local sessionId = os.getenv("SESSIONID")
 local playerName = os.getenv("PLAYERNAME")
 local playerCompany = os.getenv("PLAYERCOMPANY")
 
 emu.log(emu.getRomInfo().name)
 
-local debug = true
+local debug = false
 local timerDebug = false
-local demoMode = true
+local demoMode = false
 
 local memory = {
    playerState = 0x000E,
    gameState = 0x0770,
    coinCounter = 0x075E,
+   lives = 0x075A,
    worldCounter = 0x2073,
    levelCounter = 0x2075,
    levelLoad = 0x0772,
@@ -23,6 +25,7 @@ local memory = {
 local playerState = {
    leftMost = 0x00,
    dies = 0x06,
+   finishedLevel = 0x04,
    normal = 0x08,
    mushroom = 0x09,
    dying = 0x0B,
@@ -38,9 +41,12 @@ local gameState = {
 }
 
 local world = 0
+local levelStarted = false
 local level = 0
 local timer = 0
+local collectedCoins = 0
 local state = 0
+local lives = 3
 
 function httpGet(host, port, path)
    local tcp = socket.tcp()
@@ -72,7 +78,7 @@ function urlencode(url)
 
 function sendEvent(event)
 
-   queryString = "/event?gameEvent=" .. event .. "&playerId=" .. urlencode(playerId) .. "&playerName=" .. urlencode(playerName) .. "&playerCompany=" .. urlencode(playerCompany) .. "&gameLevel=" .. level
+   queryString = "/event?gameEvent=" .. event .. "&sessionId=jj" .. urlencode(sessionId) .. "&playerId=" .. urlencode(playerId) .. "&playerName=" .. urlencode(playerName) .. "&playerCompany=" .. urlencode(playerCompany) .. "&gameLevel=" .. level .. "&timeLeft=" .. timer .. "&totalCoins=" .. collectedCoins .. "&lives=" .. lives
    
    if debug then
       emu.log("Sending event: " .. queryString)
@@ -86,38 +92,47 @@ function sendEvent(event)
 end
 
 function playerStateCallback(address, value)
-   if debug then
-      emu.displayMessage("Debug", "playerStateCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
-   end
-
-   -- only run when player is playing, not in demo mode
    if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
       return
    end
 
+   if debug then
+      emu.log("playerStateCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+   end
+
+   -- only run when player is playing, not in demo mode
    -- Player died
-   if value == playerState.dying then
+
+   if state ~= playerState.finishedLevel and value == playerState.finishedLevel then
+      sendEvent("completedLevel")
+      emu.log("Player completed a level, time left: " .. timer .. " with lives: " .. lives)
+   end
+
+   if value == playerState.dying or value == playerState.dies and levelStarted then
       sendEvent("death")
-      emu.displayMessage("Event", "Player died")
+      emu.log("Player died, time left: " .. timer)
+      levelStarted = false
    end
 
    -- Player picket up the mushroom
-   if value == playerState.mushroom then
-      sendEvent("mushroom")
-      emu.displayMessage("Event", "Player ate mushroom")
-   end
+   -- if value == playerState.mushroom then
+   --    sendEvent("mushroom")
+   --    emu.log("Player ate mushroom")
+   -- end
 
    -- Player got hit
-   if value == playerState.hit then
-      sendEvent("hit")
-      emu.displayMessage("Event", "Player got hit")
-   end
+   -- if value == playerState.hit then
+   --    sendEvent("hit")
+   --    emu.log("Player got hit")
+   -- end
 
    -- Player picked up the fireflower
-   if value == playerState.flower then
-      sendEvent("flower")
-      emu.displayMessage("Event", "Player got flower")
-   end
+   -- if value == playerState.flower then
+   --    sendEvent("flower")
+   --    emu.log("Player got flower")
+   -- end
+
+   state = value
 end
 
 function main()
@@ -129,6 +144,7 @@ end
 function gameLoop()
    timer = tonumber(tostring( emu.read(0x07F8, emu.memType.cpu) .. emu.read(0x07F9, emu.memType.cpu) .. emu.read(0x07FA, emu.memType.cpu)))
 
+   lives = tonumber(tostring(emu.read(memory.lives, emu.memType.cpu))) + 1
    local demoTextAddress = 0x2007
 
    local cooltext = { 0x2E, 0x28, 0x17, 0x0E, 0x20, 0x24, 0x1B, 0x0E, 0x15, 0x12, 0x0C, 0x24, 0x0D, 0x0E, 0x16, 0x18, 0x28, 0x2E }
@@ -148,21 +164,31 @@ function gameLoop()
 end
 
 function coinCollectCallback(address, value)
+   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+      return
+   end
+
    if debug then
-      emu.displayMessage("Debug", "coinCollectCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+      emu.log("coinCollectCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
    end
 
    local oldCoins = emu.read(memory.coinCounter, emu.memType.cpu)
    if value ~= oldCoins then
       sendEvent("coin")
-      emu.displayMessage("Event", "Player picked up a coin")
+      collectedCoins = value
+      emu.log("Player picked up a coin, total coins: " .. collectedCoins)
    end
 end
 
 function timerCallback(address, value)
-   if timerDebug then
-      emu.displayMessage("Debug", "timerCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+      return
    end
+
+   if timerDebug then
+      emu.log("timerCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+   end
+
    local timermax = 400
    if demoMode then
       -- During demo mode, the timer is set to 401
@@ -170,39 +196,44 @@ function timerCallback(address, value)
    end
    -- Level Started
    if timer == timermax then
-      emu.displayMessage("Event:", "Level Started: " .. level)
       emu.log("Level:" .. level)
       sendEvent("levelstart")
+      levelStarted = true
    end
 
    -- Out of time
    if timer == 0 then
       sendEvent("timeout")
-      emu.displayMessage("Event", "Player ran out of time")
+      emu.log("Player ran out of time")
+      levelStarted = false
    end
 end
 
 function starTimerCallback(address, value)
+   if emu.read(0x0770, emu.memType.cpu) ~= gameState.normal and not demoMode then
+      return
+   end
+
    if timerDebug then
-      emu.displayMessage("Debug", "starTimerCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+      emu.log("starTimerCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
    end
    -- Star Timer Started
    if value == 35 then
       sendEvent("star")
-      emu.displayMessage("Event", "Player got a star")
+      emu.log("Player got a star")
       emu.log("Player got a star " .. value)
    end
 
 end
 
 emu.addEventCallback(main, emu.eventType.startFrame)
-emu.addMemoryCallback(starTimerCallback, emu.memCallbackType.cpuWrite, memory.starTimer)
+-- emu.addMemoryCallback(starTimerCallback, emu.memCallbackType.cpuWrite, memory.starTimer)
 emu.addMemoryCallback(timerCallback, emu.memCallbackType.cpuWrite, 0x07FA)
 emu.addMemoryCallback(playerStateCallback, emu.memCallbackType.cpuWrite, memory.playerState)
 emu.addMemoryCallback(coinCollectCallback, emu.memCallbackType.cpuWrite, memory.coinCounter)
 
 
 if debug then
-   emu.displayMessage("Debug", "Mario Metrics Lua script loaded.")
+   emu.log("Mario Metrics Lua script loaded.")
 end
 sendEvent("loaded")
