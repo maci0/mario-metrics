@@ -5,7 +5,8 @@ local playerName = os.getenv("PLAYERNAME")
 local playerCompany = os.getenv("PLAYERCOMPANY")
 
 emu.log(emu.getRomInfo().name)
-local debug = false
+
+local debug = true
 local timerDebug = false
 local demoMode = true
 
@@ -47,11 +48,11 @@ function httpGet(host, port, path)
    tcp:connect(host, port)
    tcp:send("GET " .. path .. " HTTP/1.1\r\nHost: " .. host .. ":" .. port .. "\r\nConnection: close\r\n\r\n")
 
-   --    local text
-   --    repeat
-   --        text = tcp:receive()
-   --        emu.log(text)
-   --    until text == nil
+   -- local text
+   -- repeat
+   --       text = tcp:receive()
+   --       emu.log(text)
+   -- until text == nil
    tcp:close()
 end
 
@@ -78,7 +79,7 @@ function sendEvent(event)
    end
    
    httpGet(
-   "192.168.0.100",
+   "127.0.0.1",
    8082,
    queryString
    )

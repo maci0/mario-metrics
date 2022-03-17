@@ -7,4 +7,6 @@ setx PLAYERNAME "%PlayerName%"
 setx PLAYEREMAIL "%PlayerEmail%"
 setx PLAYERCOMPANY "%PlayerCompany%"
 
-START /wait Mesen.exe /fullscreen smb.nes mesen.lue
+start Mesen.exe /fullscreen smb.nes mesen.lua
+timeout /t 3
+call sendkeys.bat "Mesen - smb" ""
