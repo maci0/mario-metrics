@@ -1,8 +1,9 @@
 ﻿local socket = require("socket.core")
-local playerId = "0cdc984e-7055-4913-9c05-9fa21fbc4b04"
---local playerId = "1337"
---local playerName = os.getenv("USERNAME")
-local playerName = "Marcel"
+
+local playerId = os.getenv("PLAYEREMAIL")
+local playerName = os.getenv("PLAYERNAME")
+local playerCompany = os.getenv("PLAYERCOMPANY")
+
 emu.log(emu.getRomInfo().name)
 local debug = false
 local timerDebug = false
@@ -54,9 +55,23 @@ function httpGet(host, port, path)
    tcp:close()
 end
 
+function char_to_hex(c)
+   return string.format("%%%02X", string.byte(c))
+end
+
+function urlencode(url)
+   if url == nil then
+     return
+   end
+   url = url:gsub("\n", "\r\n")
+   url = url:gsub("([^%w ])", char_to_hex)
+   url = url:gsub(" ", "+")
+   return url
+ end
+
 function sendEvent(event)
 
-   queryString = "/event?gameEvent=" .. event .. "&playerId=" .. playerId .. "&playerName=" .. playerName .. "&gameLevel=" .. level
+   queryString = "/event?gameEvent=" .. event .. "&playerId=" .. urlencode(playerId) .. "&playerName=" .. urlencode(playerName) .. "&playerCompany=" .. urlencode(playerCompany) .. "&gameLevel=" .. level
    
    if debug then
       emu.log("Sending event: " .. queryString)

@@ -37,7 +37,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/plain")
             self.end_headers()
             self.connection.close()
-            
+
             query = urlparse(self.path).query
             qsl = dict(parse_qsl(query))
             print("Parsed query parameters: ", qsl)
@@ -46,7 +46,7 @@ class MyServer(BaseHTTPRequestHandler):
                 return 1
             event = {**baseEvent , **qsl}
             print("Event: ", event)
-            event_batch.record(Event("MesenSample", event))
+            event_batch.record(Event("SuperMarioStats", event))
             return 0
 
     def log_message(self, format, *args):
