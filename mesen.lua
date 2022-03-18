@@ -1,9 +1,9 @@
 ﻿local socket = require("socket.core")
 
-local playerId = os.getenv("PLAYEREMAIL")
-local sessionId = os.getenv("SESSIONID")
-local playerName = os.getenv("PLAYERNAME")
-local playerCompany = os.getenv("PLAYERCOMPANY")
+local playerId = ""
+local sessionId = ""
+local playerName = ""
+local playerCompany = ""
 
 emu.log(emu.getRomInfo().name)
 
@@ -48,6 +48,40 @@ local collectedCoins = 0
 local state = 0
 local lives = 1
 
+local ppuCharacters = { 
+   A = 0x0A,
+   B = 0x0B,
+   C = 0x0C,
+   D = 0x0D,
+   E = 0x0E,
+   F = 0x0F,
+   G = 0x10,
+   H = 0x11,
+   I = 0x12,
+   J = 0x13,
+   K = 0x14,
+   L = 0x15,
+   M = 0x16,
+   N = 0x17,
+   O = 0x18,
+   P = 0x19,
+   Q = 0x1A,
+   R = 0x1B,
+   S = 0x1C,
+   T = 0x1D,
+   U = 0x1E,
+   V = 0x1F,
+   W = 0x20,
+   X = 0x21,
+   Y = 0x22,
+   Z = 0x23,
+   SPACE = 0x24,
+   COIN = 0x2E,
+   DASH = 0x28
+}
+
+
+
 function httpGet(host, port, path)
    local tcp = socket.tcp()
    tcp:settimeout(2)
@@ -78,7 +112,7 @@ function urlencode(url)
 
 function sendEvent(event)
 
-   queryString = "/event?gameEvent=" .. event .. "&sessionId=jj" .. urlencode(sessionId) .. "&playerId=" .. urlencode(playerId) .. "&playerName=" .. urlencode(playerName) .. "&playerCompany=" .. urlencode(playerCompany) .. "&gameLevel=" .. level .. "&timeLeft=" .. timer .. "&totalCoins=" .. collectedCoins .. "&lives=" .. lives
+   queryString = "/event?gameEvent=" .. event .. "&sessionId=" .. urlencode(sessionId) .. "&playerId=" .. urlencode(playerId) .. "&playerName=" .. urlencode(playerName) .. "&playerCompany=" .. urlencode(playerCompany) .. "&gameLevel=" .. level .. "&timeLeft=" .. timer .. "&totalCoins=" .. collectedCoins .. "&lives=" .. lives
    
    if debug then
       emu.log("Sending event: " .. queryString)
@@ -136,8 +170,19 @@ function playerStateCallback(address, value)
 end
 
 function main()
-   --  only allow 1 life
-   emu.write(memory.lives, 0x00, emu.memType.cpu)
+   -- set max number of lives, 0 = 1 live
+   local MaxLife = os.getenv("TOTAL_LIFE");
+   if MaxLife ~= nil then 
+      emu.write(memory.lives, tonumber(MaxLife), emu.memType.cpu)
+   end
+
+   -- see list of levels https://www.mariowiki.com/Super_Mario_Bros.
+   -- start from world, starting from (0: world 1)
+   local StartFromWorld = os.getenv("START_WORLD");
+   if StartFromWorld ~= nil then 
+      emu.write(0x075F, tonumber(StartFromWorld), emu.memType.cpu)
+   end
+
    gameLoop()
 end
 
@@ -148,19 +193,78 @@ function gameLoop()
    
    local demoTextAddress = 0x2007
 
-   local cooltext = { 0x2E, 0x28, 0x17, 0x0E, 0x20, 0x24, 0x1B, 0x0E, 0x15, 0x12, 0x0C, 0x24, 0x0D, 0x0E, 0x16, 0x18, 0x28, 0x2E }
-   for index, value in pairs(cooltext) do
-      emu.write(demoTextAddress, value, emu.memType.ppu)
-      demoTextAddress = demoTextAddress + 1
+   -- Write "NEW RELIC DEMO" to the title location
+   -- local cooltext = { 0x2E, 0x28, 0x17, 0x0E, 0x20, 0x24, 0x1B, 0x0E, 0x15, 0x12, 0x0C, 0x24, 0x0D, 0x0E, 0x16, 0x18, 0x28, 0x2E }
+   -- for index, value in pairs(cooltext) do
+   --    emu.write(demoTextAddress, value, emu.memType.ppu)
+   --    demoTextAddress = demoTextAddress + 1
 
-      if emu.read(memory.worldCounter, emu.memType.ppu) < 8 and emu.read(memory.levelCounter, emu.memType.ppu) < 4 then
-         level = tostring(emu.read(memory.worldCounter, emu.memType.ppu) .. "-" .. emu.read(memory.levelCounter, emu.memType.ppu))
-      end
+   --    if emu.read(memory.worldCounter, emu.memType.ppu) < 8 and emu.read(memory.levelCounter, emu.memType.ppu) < 4 then
+   --       level = tostring(emu.read(memory.worldCounter, emu.memType.ppu) .. "-" .. emu.read(memory.levelCounter, emu.memType.ppu))
+   --    end
+   -- end
+   if emu.read(memory.worldCounter, emu.memType.ppu) < 8 and emu.read(memory.levelCounter, emu.memType.ppu) < 4 then
+      level = tostring(emu.read(memory.worldCounter, emu.memType.ppu) .. "-" .. emu.read(memory.levelCounter, emu.memType.ppu))
    end
 
-   emu.write(0x2046, 0x0C, emu.memType.ppu)
-   emu.write(0x2047, 0x0E, emu.memType.ppu)
-   emu.write(0x2048, 0x15, emu.memType.ppu)
+   SetPlayerName()
+   local GameTitle = os.getenv("GAME_TITLE");
+   if GameTitle ~= nil then 
+      SetTitle(GameTitle)
+   else
+      SetTitle("-New Relic Demo-")
+   end
+end
+
+
+function SetPlayerName()
+   local nameSlotStart = 0x2043
+   -- only render the first 10 characters of the player name
+   local firstName = string.sub(Split(string.upper(playerName), " ")[1],1,7)
+   for i = 1, string.len(firstName) do
+      local char = string.sub(firstName, i, i)
+      if ppuCharacters[char] ~= nil then
+         emu.write(nameSlotStart, ppuCharacters[char], emu.memType.ppu)
+      else
+         emu.write(nameSlotStart, ppuCharacters['SPACE'], emu.memType.ppu)
+      end
+      nameSlotStart = nameSlotStart + 1
+   end
+
+   -- clear the remaining of the MARIO
+   if string.len(firstName) < 5 then
+      nameSlotStart = 0x2043 + string.len(firstName)
+      for i = string.len(firstName) + 1, 5 do
+         emu.write(nameSlotStart, ppuCharacters['SPACE'], emu.memType.ppu)
+         nameSlotStart = nameSlotStart + 1
+      end
+   end
+end
+
+function SetTitle(title)
+   local nameSlotStart = 0x2007
+   -- only render the first 10 characters of the player name
+   local titleUpper = string.upper(title)
+   for i = 1, string.len(titleUpper) do
+      local char = string.sub(titleUpper, i, i)
+      if ppuCharacters[char] ~= nil then
+         emu.write(nameSlotStart, ppuCharacters[char], emu.memType.ppu)
+      elseif char == '-' then
+         emu.write(nameSlotStart, ppuCharacters['DASH'], emu.memType.ppu)
+      else
+         emu.write(nameSlotStart, ppuCharacters['SPACE'], emu.memType.ppu)
+      end
+      nameSlotStart = nameSlotStart + 1
+   end
+end
+
+
+function Split(s, delimiter)
+   result = {};
+   for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+       table.insert(result, match);
+   end
+   return result;
 end
 
 function coinCollectCallback(address, value)
@@ -236,4 +340,28 @@ emu.addMemoryCallback(coinCollectCallback, emu.memCallbackType.cpuWrite, memory.
 if debug then
    emu.log("Mario Metrics Lua script loaded.")
 end
+
+
+-- get all lines from a file, returns an empty 
+-- list/table if the file does not exist
+function lines_from(file)
+   local lines = {}
+   for line in io.lines(file) do 
+     lines[#lines + 1] = line
+   end
+   return lines
+ end
+ 
+ -- tests the functions above
+ local userfile = os.getenv("APPDATA") .. '/player.ini'
+ local lines = lines_from(userfile)
+ 
+ -- print all line numbers and their contents
+ for k,v in pairs(lines) do
+   if k == 1 then playerName = v end
+   if k == 2 then playerId = v end
+   if k == 3 then playerCompany = v end
+   if k == 4 then sessionId = v end
+ end
+
 sendEvent("loaded")

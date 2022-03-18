@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import subprocess
 import time
 import atexit
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -40,13 +41,21 @@ class MyServer(BaseHTTPRequestHandler):
 
             query = urlparse(self.path).query
             qsl = dict(parse_qsl(query))
-            print("Parsed query parameters: ", qsl)
+            # print("Parsed query parameters: ", qsl)
             if not qsl:
                 print ("qsl data empty")
                 return 1
             event = {**baseEvent , **qsl}
+            print("                          ")
             print("Event: ", event)
             event_batch.record(Event("SuperMarioStats", event))
+
+            # end the game
+            if self.path.find('gameEvent=death') > 0 or self.path.find('gameEvent=completedLevel') > 0:
+                time.sleep(2.5)
+                os.system('Taskkill /im mesen.exe /f')
+                subprocess.Popen('completed.exe', creationflags=subprocess.CREATE_NEW_CONSOLE)
+
             return 0
 
     def log_message(self, format, *args):
