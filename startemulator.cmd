@@ -1,1 +1,0 @@
-start Mesen.exe /fullscreen smb.nes mesen.lua

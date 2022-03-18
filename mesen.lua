@@ -172,15 +172,17 @@ end
 function main()
    -- set max number of lives, 0 = 1 live
    local MaxLife = os.getenv("TOTAL_LIFE");
-   if MaxLife ~= nil then 
-      emu.write(memory.lives, tonumber(MaxLife), emu.memType.cpu)
+   if MaxLife ~= nil then
+      emu.write(memory.lives, tonumber(MaxLife) - 1, emu.memType.cpu)
+   else
+      emu.write(memory.lives, 0, emu.memType.cpu)
    end
 
    -- see list of levels https://www.mariowiki.com/Super_Mario_Bros.
    -- start from world, starting from (0: world 1)
    local StartFromWorld = os.getenv("START_WORLD");
-   if StartFromWorld ~= nil then 
-      emu.write(0x075F, tonumber(StartFromWorld), emu.memType.cpu)
+   if StartFromWorld ~= nil then
+      emu.write(0x075F, tonumber(StartFromWorld) - 1, emu.memType.cpu)
    end
 
    gameLoop()
