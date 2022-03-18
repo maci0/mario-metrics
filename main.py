@@ -54,6 +54,8 @@ class MyServer(BaseHTTPRequestHandler):
             if self.path.find('gameEvent=death') > 0 or self.path.find('gameEvent=completedLevel') > 0:
                 time.sleep(2.5)
                 os.system('Taskkill /im mesen.exe /f')
+                os.system('Taskkill /im completed.exe /f')
+                os.system('Taskkill /im starthere.exe /f')
                 subprocess.Popen('completed.exe', creationflags=subprocess.CREATE_NEW_CONSOLE)
 
             return 0
