@@ -22,7 +22,7 @@ setx NEW_RELIC_LICENSE_KEY enter_nr_ingest_key
 :: Number of lives player has, default is 1
 setx TOTAL_LIFE 1
 
-:: Start from world number (1 to 8), default is 1
+:: Start from world number (1 to 8), default is 1 (see https://www.mariowiki.com/Super_Mario_Bros)
 setx START_WORLD 3
 
 :: Title text, default is "-New Relic Demo-" (note: only A-Z and Dash are allowed)
