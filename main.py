@@ -66,7 +66,7 @@ if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
-    event_client = EventClient(os.environ["NEW_RELIC_LICENSE_KEY"]) 
+    event_client = EventClient(os.environ["NEW_RELIC_LICENSE_KEY"])
     event_batch = EventBatch()
     event_harvester = Harvester(event_client, event_batch)
 

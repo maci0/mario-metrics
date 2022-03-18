@@ -1,1 +1,3 @@
-# mario-metrics
+# New Relic Super Mario Demo
+
+## Prerequisites
