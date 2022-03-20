@@ -172,7 +172,8 @@ end
 function main()
    -- set max number of lives, 0 = 1 live
    local MaxLife = os.getenv("TOTAL_LIFE");
-   if MaxLife ~= nil then
+   emu.log("script started with max number of lives: " .. MaxLife)
+   if MaxLife ~= nil and MaxLife ~= "0" then
       emu.write(memory.lives, tonumber(MaxLife) - 1, emu.memType.cpu)
    else
       emu.write(memory.lives, 0, emu.memType.cpu)
