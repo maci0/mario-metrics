@@ -291,8 +291,10 @@ function timerCallback(address, value)
       return
    end
 
+   local timeLeft = tonumber(string.format("0x%02x",value))
+
    if timerDebug then
-      emu.log("timerCallback:" .. string.format("0x%04x", address) .. " " .. string.format("0x%02x",value))
+      emu.log("timerCallback:" .. string.format("0x%04x", address) .. " " .. timeLeft)
    end
 
    local timermax = 400
@@ -308,6 +310,11 @@ function timerCallback(address, value)
    end
 
    -- Out of time
+   if timer % 2 == 0 then
+      sendEvent("timer")
+      emu.log("Time remaining: " .. timer)
+   end
+
    if timer == 0 then
       sendEvent("timeout")
       emu.log("Player ran out of time")
