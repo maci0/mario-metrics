@@ -1,307 +1,307 @@
 {
-	"name": "Anthony - Super Mario",
-	"description": null,
-	"permissions": "PUBLIC_READ_WRITE",
-	"pages": [
-		{
-			"name": "Anthony - Super Mario",
-			"description": null,
-			"widgets": [
-				{
-					"visualization": {
-						"id": "viz.markdown"
-					},
-					"layout": {
-						"column": 1,
-						"row": 1,
-						"height": 3,
-						"width": 2
-					},
-					"title": "",
-					"rawConfiguration": {
-						"text": "![](https://png.pngitem.com/pimgs/s/163-1637569_image-result-for-mario-sprite-video-game-font.png)"
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.markdown"
-					},
-					"layout": {
-						"column": 3,
-						"row": 1,
-						"height": 3,
-						"width": 2
-					},
-					"title": "",
-					"rawConfiguration": {
-						"text": "# DevOps Summit Melbourne 2022\n## Play Super Mario and WIN cool prizes\n- Top 3 fastest players who complete the level\n- Top 3 players who collect most coins AND completed the level in **1/2** the allowed time"
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.line"
-					},
-					"layout": {
-						"column": 5,
-						"row": 1,
-						"height": 3,
-						"width": 4
-					},
-					"title": "Last 5 Games Live Stats - Coin and Time left",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"legend": {
-							"enabled": true
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)*10) where gameEvent ='coin' and totalCoins is not null timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
-							},
-							{
-								"accountId": 3400472,
-								"query": "FROM PageView SELECT count(*) SINCE 1 minutes ago TIMESERIES 5 seconds"
-							},
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where gameEvent ='coin' and totalCoins is not null timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
-							}
-						],
-						"yAxisLeft": {
-							"zero": false
-						}
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.billboard"
-					},
-					"layout": {
-						"column": 9,
-						"row": 1,
-						"height": 1,
-						"width": 2
-					},
-					"title": "Live stats - Coin and Time left",
-					"rawConfiguration": {
-						"dataFormatters": [],
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "SELECT max(numeric(totalCoins)) AS 'Max Coins Collected' FROM SuperMarioStats since 2 days ago"
-							}
-						],
-						"thresholds": []
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.billboard"
-					},
-					"layout": {
-						"column": 11,
-						"row": 1,
-						"height": 1,
-						"width": 2
-					},
-					"title": "Live stats - Coin and Time left",
-					"rawConfiguration": {
-						"dataFormatters": [],
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT max(400 - numeric(timeLeft)) as 'Fastest Completion Time (Seconds)' where gameEvent = 'completedLevel' since 2 days ago"
-							}
-						],
-						"thresholds": []
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.billboard"
-					},
-					"layout": {
-						"column": 9,
-						"row": 2,
-						"height": 2,
-						"width": 2
-					},
-					"title": "",
-					"rawConfiguration": {
-						"dataFormatters": [],
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT sum(numeric(totalCoins) as 'coins collected')  where gameEvent = 'completedLevel' since 2 day ago"
-							}
-						],
-						"thresholds": []
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.billboard"
-					},
-					"layout": {
-						"column": 11,
-						"row": 2,
-						"height": 2,
-						"width": 2
-					},
-					"title": "",
-					"rawConfiguration": {
-						"dataFormatters": [],
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "SELECT uniqueCount(playerId) AS 'Players' FROM SuperMarioStats since 2 days ago"
-							}
-						],
-						"thresholds": []
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.bar"
-					},
-					"layout": {
-						"column": 1,
-						"row": 4,
-						"height": 5,
-						"width": 6
-					},
-					"title": "Leaderboard - Fastest time to complete level - Prize for top 3",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where gameEvent = 'completedLevel' facet  playerCompany, playerName since 2 days ago"
-							}
-						]
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.bar"
-					},
-					"layout": {
-						"column": 7,
-						"row": 4,
-						"height": 5,
-						"width": 6
-					},
-					"title": "Leaderboard  - Most By Coins collected and complete level in half allowed time - Prize for top 3",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where gameEvent = 'completedLevel' and numeric(timeLeft) >= 200 facet  playerCompany, playerName since 2 days ago "
-							}
-						]
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.bar"
-					},
-					"layout": {
-						"column": 1,
-						"row": 9,
-						"height": 3,
-						"width": 4
-					},
-					"title": "Avg Time by Company",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT average(400 - numeric(timeLeft)) as seconds where gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
-							}
-						]
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.bar"
-					},
-					"layout": {
-						"column": 5,
-						"row": 9,
-						"height": 3,
-						"width": 4
-					},
-					"title": "Avg Coins collected by Company",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT average(numeric(totalCoins)) where gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
-							}
-						]
-					},
-					"linkedEntityGuids": null
-				},
-				{
-					"visualization": {
-						"id": "viz.pie"
-					},
-					"layout": {
-						"column": 9,
-						"row": 9,
-						"height": 3,
-						"width": 4
-					},
-					"title": "Players Completed vs Died",
-					"rawConfiguration": {
-						"facet": {
-							"showOtherSeries": false
-						},
-						"nrqlQueries": [
-							{
-								"accountId": 3400472,
-								"query": "FROM SuperMarioStats SELECT uniqueCount(playerId) where gameEvent = 'death' OR gameEvent = 'completedLevel'  facet gameEvent since 2 days ago"
-							}
-						]
-					},
-					"linkedEntityGuids": null
-				}
-			]
-		}
-	]
+  "name": "Anthony - Super Mario",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "name": "Anthony - Super Mario",
+      "description": null,
+      "widgets": [
+        {
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "height": 3,
+            "width": 2
+          },
+          "title": "",
+          "rawConfiguration": {
+            "text": "![](https://png.pngitem.com/pimgs/s/163-1637569_image-result-for-mario-sprite-video-game-font.png)"
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.markdown"
+          },
+          "layout": {
+            "column": 3,
+            "row": 1,
+            "height": 3,
+            "width": 2
+          },
+          "title": "",
+          "rawConfiguration": {
+            "text": "# DevOps Summit Melbourne 2022\n## Play Super Mario and WIN cool prizes\n- Top 3 fastest players who complete the level\n- Top 3 players who collect most coins AND completed the level in **1/2** the allowed time"
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.line"
+          },
+          "layout": {
+            "column": 5,
+            "row": 1,
+            "height": 3,
+            "width": 4
+          },
+          "title": "Last 5 Games Live Stats - Coin and Time left",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)*10) timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
+              },
+              {
+                "accountId": 3400472,
+                "query": "FROM PageView SELECT count(*) SINCE 1 minutes ago TIMESERIES 5 seconds"
+              },
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
+              }
+            ],
+            "yAxisLeft": {
+              "zero": false
+            }
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 9,
+            "row": 1,
+            "height": 1,
+            "width": 2
+          },
+          "title": "Live stats - Coin and Time left",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "SELECT max(numeric(totalCoins)) AS 'Max Coins Collected' FROM SuperMarioStats since 2 days ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 11,
+            "row": 1,
+            "height": 1,
+            "width": 2
+          },
+          "title": "Live stats - Coin and Time left",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(400 - numeric(timeLeft)) as 'Fastest Completion Time (Seconds)' where gameEvent = 'completedLevel' since 2 days ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 9,
+            "row": 2,
+            "height": 2,
+            "width": 2
+          },
+          "title": "",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT sum(numeric(totalCoins) as 'coins collected')  where gameEvent = 'completedLevel' since 2 day ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 11,
+            "row": 2,
+            "height": 2,
+            "width": 2
+          },
+          "title": "",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "SELECT uniqueCount(playerId) AS 'Players' FROM SuperMarioStats since 2 days ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 1,
+            "row": 4,
+            "height": 3,
+            "width": 6
+          },
+          "title": "Leaderboard - Fastest time to complete level - Prize for top 3",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where gameEvent = 'completedLevel' facet  playerCompany, playerName since 2 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 7,
+            "row": 4,
+            "height": 3,
+            "width": 6
+          },
+          "title": "Leaderboard  - Most By Coins collected and complete level in half allowed time - Prize for top 3",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where gameEvent = 'completedLevel' and numeric(timeLeft) >= 200 facet  playerCompany, playerName since 2 days ago "
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 1,
+            "row": 7,
+            "height": 3,
+            "width": 4
+          },
+          "title": "Avg Time by Company",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT average(400 - numeric(timeLeft)) as seconds where gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 5,
+            "row": 7,
+            "height": 3,
+            "width": 4
+          },
+          "title": "Avg Coins collected by Company",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT average(numeric(totalCoins)) where gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.pie"
+          },
+          "layout": {
+            "column": 9,
+            "row": 7,
+            "height": 3,
+            "width": 4
+          },
+          "title": "Players Completed vs Died",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT uniqueCount(playerId) where gameEvent = 'death' OR gameEvent = 'completedLevel'  facet gameEvent since 2 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        }
+      ]
+    }
+  ]
 }
