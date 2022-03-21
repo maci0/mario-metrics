@@ -19,7 +19,7 @@
           },
           "title": "",
           "rawConfiguration": {
-            "text": "![](https://png.pngitem.com/pimgs/s/163-1637569_image-result-for-mario-sprite-video-game-font.png)"
+            "text": "![](https://png.pngitem.com/pimgs/s/163-1637569_image-result-for-mario-sprite-video-game-font.png)\n\n![](https://oyster.ignimgs.com/mediawiki/apis.ign.com/super-mario-bros/f/f4/SuperMario001.jpg)\n"
           },
           "linkedEntityGuids": null
         },
@@ -35,7 +35,7 @@
           },
           "title": "",
           "rawConfiguration": {
-            "text": "# DevOps Summit Melbourne 2022\n## Play Super Mario and WIN cool prizes\n- Top 3: Fastest players who complete the level\n- Top 3: Collect most coins and finish the level under **200 SECONDS**\n\n## Prizes:\n- 1st place: ......\n- 2nd place: ......\n- 3rd place: ......"
+            "text": "# DevOps Summit Melbourne 2022\n## Complete Super Mario Level 1 in shortest time and collect most coins\n## Prizes:\n- 1st place: ......\n- 2nd place: ......\n- 3rd place: ......"
           },
           "linkedEntityGuids": null
         },
@@ -185,9 +185,9 @@
             "column": 1,
             "row": 5,
             "height": 3,
-            "width": 3
+            "width": 6
           },
-          "title": "Fastest time to complete level - Prize for top 3",
+          "title": "High Score (time * 100 + coins * 200) : TOP 3 TO WIN",
           "rawConfiguration": {
             "facet": {
               "showOtherSeries": false
@@ -195,31 +195,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where gameEvent = 'completedLevel' facet  playerCompany, playerName since 1 days ago"
-              }
-            ]
-          },
-          "linkedEntityGuids": null
-        },
-        {
-          "visualization": {
-            "id": "viz.bar"
-          },
-          "layout": {
-            "column": 4,
-            "row": 5,
-            "height": 3,
-            "width": 3
-          },
-          "title": "Most By Coins collected and complete level in 200 seconds - Prize for top 3",
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where gameEvent = 'completedLevel' and numeric(timeLeft) >= 200 facet  playerCompany, playerName since 1 days ago "
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) where gameEvent = 'completedLevel' facet playerCompany, playerName since 1 days ago"
               }
             ]
           },
