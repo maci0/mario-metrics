@@ -83,7 +83,59 @@
             "height": 2,
             "width": 2
           },
-          "title": "Live stats - Coin and Time left",
+          "title": "",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) as 'Top Score' where gameEvent = 'completedLevel' since 1 day ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 11,
+            "row": 1,
+            "height": 2,
+            "width": 2
+          },
+          "title": "Number of Games",
+          "rawConfiguration": {
+            "dataFormatters": [],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "SELECT uniqueCount(sessionId) AS '# of Games' FROM SuperMarioStats since 1 days ago"
+              }
+            ],
+            "thresholds": []
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.billboard"
+          },
+          "layout": {
+            "column": 9,
+            "row": 3,
+            "height": 2,
+            "width": 2
+          },
+          "title": "Max Coins collected",
           "rawConfiguration": {
             "dataFormatters": [],
             "facet": {
@@ -105,37 +157,11 @@
           },
           "layout": {
             "column": 11,
-            "row": 1,
-            "height": 2,
-            "width": 2
-          },
-          "title": "Live stats - Coin and Time left",
-          "rawConfiguration": {
-            "dataFormatters": [],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(400 - numeric(timeLeft)) as 'Fastest Completion Time (Seconds)' where gameEvent = 'completedLevel' since 1 days ago"
-              }
-            ],
-            "thresholds": []
-          },
-          "linkedEntityGuids": null
-        },
-        {
-          "visualization": {
-            "id": "viz.billboard"
-          },
-          "layout": {
-            "column": 9,
             "row": 3,
             "height": 2,
             "width": 2
           },
-          "title": "",
+          "title": "Fastest Time",
           "rawConfiguration": {
             "dataFormatters": [],
             "facet": {
@@ -144,33 +170,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT sum(numeric(totalCoins) as 'coins collected')  where gameEvent = 'completedLevel' since 1 day ago"
-              }
-            ],
-            "thresholds": []
-          },
-          "linkedEntityGuids": null
-        },
-        {
-          "visualization": {
-            "id": "viz.billboard"
-          },
-          "layout": {
-            "column": 11,
-            "row": 3,
-            "height": 2,
-            "width": 2
-          },
-          "title": "",
-          "rawConfiguration": {
-            "dataFormatters": [],
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountId": 3400472,
-                "query": "SELECT uniqueCount(playerId) AS 'Players' FROM SuperMarioStats since 1 days ago"
+                "query": "FROM SuperMarioStats SELECT max(400 - numeric(timeLeft)) as 'Fastest Time (Seconds)' where gameEvent = 'completedLevel' since 1 days ago"
               }
             ],
             "thresholds": []
