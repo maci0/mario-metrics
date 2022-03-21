@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import subprocess
 import time
 import atexit
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -37,16 +38,26 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_header("Content-type", "text/plain")
             self.end_headers()
             self.connection.close()
-            
+
             query = urlparse(self.path).query
             qsl = dict(parse_qsl(query))
-            print("Parsed query parameters: ", qsl)
+            # print("Parsed query parameters: ", qsl)
             if not qsl:
                 print ("qsl data empty")
                 return 1
             event = {**baseEvent , **qsl}
+            print("                          ")
             print("Event: ", event)
-            event_batch.record(Event("MesenSample", event))
+            event_batch.record(Event("SuperMarioStats", event))
+
+            # end the game
+            if self.path.find('gameEvent=death') > 0 or self.path.find('gameEvent=completedLevel') > 0:
+                time.sleep(2.5)
+                os.system('Taskkill /im mesen.exe /f')
+                os.system('Taskkill /im completed.exe /f')
+                os.system('Taskkill /im starthere.exe /f')
+                subprocess.Popen('completed.exe', creationflags=subprocess.CREATE_NEW_CONSOLE)
+
             return 0
 
     def log_message(self, format, *args):
@@ -57,7 +68,7 @@ if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
-    event_client = EventClient(os.environ["NEW_RELIC_LICENSE_KEY"]) 
+    event_client = EventClient(os.environ["NEW_RELIC_LICENSE_KEY"])
     event_batch = EventBatch()
     event_harvester = Harvester(event_client, event_batch)
 
