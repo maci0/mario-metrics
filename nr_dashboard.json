@@ -64,10 +64,6 @@
               },
               {
                 "accountId": 3400472,
-                "query": "FROM PageView SELECT count(*) SINCE 1 minutes ago TIMESERIES 5 seconds"
-              },
-              {
-                "accountId": 3400472,
                 "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
               }
             ],
