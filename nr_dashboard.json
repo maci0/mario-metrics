@@ -15,27 +15,11 @@
             "column": 1,
             "row": 1,
             "height": 4,
-            "width": 1
+            "width": 3
           },
           "title": "",
           "rawConfiguration": {
-            "text": "![](https://png.pngitem.com/pimgs/s/163-1637569_image-result-for-mario-sprite-video-game-font.png)\n\n![](https://oyster.ignimgs.com/mediawiki/apis.ign.com/super-mario-bros/f/f4/SuperMario001.jpg)\n"
-          },
-          "linkedEntityGuids": null
-        },
-        {
-          "visualization": {
-            "id": "viz.markdown"
-          },
-          "layout": {
-            "column": 2,
-            "row": 1,
-            "height": 4,
-            "width": 2
-          },
-          "title": "",
-          "rawConfiguration": {
-            "text": "## Complete Lvl 1 in Shortest time and collect most coins\n- 1st place: MEGABOOM 3 Night Black ($299)\n- 2nd place: JBL TUNE 225 TWS ($179)\n- 3rd place: $100 JB Hifi Gift Card\n\n![](https://i.ebayimg.com/thumbs/images/g/2iUAAOSwXKVhfB-B/s-l96.jpg)\n![](https://i.ebayimg.com/thumbs/images/g/9VMAAOSwRjRgyQv9/s-l96.jpg)\n![](https://i0.wp.com/renosave.com.au/wp-content/uploads/2019/05/JB-Hifi.png?resize=128%2C128&ssl=1)"
+            "text": "![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfsVEcNbn_D-03zU5zsibOHpUQgb7dxlNTVg&usqp=CAU)\n![](https://i.ebayimg.com/thumbs/images/g/2iUAAOSwXKVhfB-B/s-l96.jpg)\n![](https://i.ebayimg.com/thumbs/images/g/9VMAAOSwRjRgyQv9/s-l96.jpg)\n![](https://i0.wp.com/renosave.com.au/wp-content/uploads/2019/05/JB-Hifi.png?resize=128%2C128&ssl=1)\n# Complete Lvl. 1 in Shortest time and collect most coins\n- 1st place: MEGABOOM 3 Night Black ($299)\n- 2nd place: JBL TUNE 225 TWS ($179)\n- 3rd place: $100 JB Hifi Gift Card\n\n"
           },
           "linkedEntityGuids": null
         },
@@ -109,7 +93,7 @@
             "height": 2,
             "width": 2
           },
-          "title": "Number of Games",
+          "title": "Number of Players",
           "rawConfiguration": {
             "dataFormatters": [],
             "facet": {
@@ -118,7 +102,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "SELECT uniqueCount(sessionId) AS '# of Games' FROM SuperMarioStats since 1 days ago"
+                "query": "SELECT uniqueCount(playerId) AS '# of Players' FROM SuperMarioStats since 1 days ago"
               }
             ],
             "thresholds": []
@@ -170,7 +154,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(400 - numeric(timeLeft)) as 'Fastest Time (Seconds)' where gameEvent = 'completedLevel' since 1 days ago"
+                "query": "FROM SuperMarioStats SELECT min(400 - numeric(timeLeft)) as 'Fastest Time (Seconds)' where gameEvent = 'completedLevel' since 1 days ago"
               }
             ],
             "thresholds": []
@@ -185,7 +169,7 @@
             "column": 1,
             "row": 5,
             "height": 3,
-            "width": 4
+            "width": 2
           },
           "title": "High Score (time * 100 + coins * 200) : TOP 3 TO WIN",
           "rawConfiguration": {
@@ -203,13 +187,61 @@
         },
         {
           "visualization": {
-            "id": "viz.stacked-bar"
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 3,
+            "row": 5,
+            "height": 3,
+            "width": 2
+          },
+          "title": "Completed level with most time remaining",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where gameEvent = 'completedLevel' facet playerCompany, playerName since 1 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
           },
           "layout": {
             "column": 5,
             "row": 5,
             "height": 3,
-            "width": 8
+            "width": 2
+          },
+          "title": "Most coins collected",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where gameEvent = 'completedLevel' facet playerCompany, playerName since 1 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.stacked-bar"
+          },
+          "layout": {
+            "column": 7,
+            "row": 5,
+            "height": 3,
+            "width": 6
           },
           "title": "High Score - Last Hour",
           "rawConfiguration": {
