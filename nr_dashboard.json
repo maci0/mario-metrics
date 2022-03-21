@@ -35,7 +35,7 @@
           },
           "title": "",
           "rawConfiguration": {
-            "text": "# DevOps Summit Melbourne 2022\n## Complete Super Mario Level 1 in shortest time and collect most coins\n## Prizes:\n- 1st place: ......\n- 2nd place: ......\n- 3rd place: ......"
+            "text": "## Complete Super Mario Lvl 1 in Shortest time and collect most coins\n- 1st place: MEGABOOM 3 Night Black ($299)\n- 2nd place: JBL TUNE 225 TWS ($179)\n- 3rd place: $100 JB Hifi Gift Card\n\n![](https://i.ebayimg.com/thumbs/images/g/2iUAAOSwXKVhfB-B/s-l96.jpg)\n![](https://i.ebayimg.com/thumbs/images/g/9VMAAOSwRjRgyQv9/s-l96.jpg)\n![](https://i0.wp.com/renosave.com.au/wp-content/uploads/2019/05/JB-Hifi.png?resize=128%2C128&ssl=1)"
           },
           "linkedEntityGuids": null
         },
@@ -185,7 +185,7 @@
             "column": 1,
             "row": 5,
             "height": 3,
-            "width": 6
+            "width": 4
           },
           "title": "High Score (time * 100 + coins * 200) : TOP 3 TO WIN",
           "rawConfiguration": {
@@ -206,12 +206,12 @@
             "id": "viz.stacked-bar"
           },
           "layout": {
-            "column": 7,
+            "column": 5,
             "row": 5,
             "height": 3,
-            "width": 6
+            "width": 8
           },
-          "title": "Most Coins collected and complete level ",
+          "title": "High Score - Last Hour",
           "rawConfiguration": {
             "facet": {
               "showOtherSeries": false
@@ -222,7 +222,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where gameEvent = 'completedLevel' facet playerCompany, playerName TIMESERIES 10 seconds since 1 hour ago"
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) where gameEvent = 'completedLevel' facet playerCompany, playerName TIMESERIES 10 seconds since 1 hour ago"
               }
             ]
           },
