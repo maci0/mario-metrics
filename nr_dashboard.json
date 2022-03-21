@@ -60,11 +60,11 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)*10) timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
+                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)*10) timeseries 5 seconds facet playerName since 5 minutes ago limit max"
               },
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) timeseries 5 seconds facet playerName since 5 minutes ago limit 5"
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) timeseries 5 seconds facet playerName since 5 minutes ago limit max"
               }
             ],
             "yAxisLeft": {
