@@ -19,7 +19,7 @@ GUID()
 }
 
 Start:
-InputBox, _name, Next Player, Please enter your name, press Enter to continue, DONTHIDE, 400, 110
+InputBox, _name, Next Player, Please enter your name. Press Enter to continue, DONTHIDE, 350, 130
 
 if ErrorLevel or !_name
 {
