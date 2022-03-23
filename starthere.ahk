@@ -19,7 +19,7 @@ GUID()
 }
 
 Start:
-InputBox, _name, Next Player, Please enter your name, DONTHIDE, 320, 110
+InputBox, _name, Next Player, Please enter your name, press Enter to continue, DONTHIDE, 400, 110
 
 if ErrorLevel or !_name
 {
@@ -33,7 +33,7 @@ if !RegExMatch(_name, "^[a-z ,A-Z'.]+$") {
 }
 
 Email:
-InputBox, _email, Your Email, Please enter your email address. We will send you an email if you win a prize, DONTHIDE, 320, 160
+InputBox, _email, Your Email, Please enter your email address. We will send you an email if you win a prize, DONTHIDE, 320, 150
 
 if ErrorLevel or !_email
 {
