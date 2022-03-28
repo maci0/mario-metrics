@@ -19,7 +19,7 @@ GUID()
 }
 
 Start:
-InputBox, _name, Next Player, Please enter your name, press Enter to continue, DONTHIDE, 400, 110
+InputBox, _name, Next Player, Please enter your name. Press Enter to continue, DONTHIDE, 350, 130
 
 if ErrorLevel or !_name
 {
@@ -41,13 +41,13 @@ if ErrorLevel or !_email
     Goto, Email
 }
 
-if !RegExMatch(_email, "^[0-9a-z._-A-Z]+@{1}[0-9a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,5}$") {
+if !RegExMatch(_email, "^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$") {
     MsgBox, Invalid Email Address
     Goto, Email
 }
 
 Company:
-InputBox, _company, Your Company, Please enter your company name., DONTHIDE, 320, 110
+InputBox, _company, Your Company, Please enter your company name., DONTHIDE, 320, 150
 
 if ErrorLevel or !_company
 {
