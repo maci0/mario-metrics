@@ -14,7 +14,7 @@
           "layout": {
             "column": 1,
             "row": 1,
-            "height": 7,
+            "height": 6,
             "width": 2
           },
           "title": "",
@@ -76,7 +76,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) as 'Top Score' where playerCompany != 'New Relic' and gameEvent = 'completedLevel' since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) as 'Top Score' where playerCompany != 'New Relic' and gameEvent = 'completedLevel' since 2 days ago"
               }
             ],
             "thresholds": []
@@ -102,7 +102,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "SELECT uniqueCount(playerId) AS '# of Players' FROM SuperMarioStats where playerCompany != 'New Relic' since 8 hours ago"
+                "query": "SELECT uniqueCount(playerId) AS '# of Players' FROM SuperMarioStats where playerCompany != 'New Relic' since 2 days ago"
               }
             ],
             "thresholds": []
@@ -128,7 +128,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "SELECT max(numeric(totalCoins)) AS 'Max Coins Collected' FROM SuperMarioStats where playerCompany != 'New Relic' since 8 hours ago"
+                "query": "SELECT max(numeric(totalCoins)) AS 'Max Coins Collected' FROM SuperMarioStats where playerCompany != 'New Relic' since 2 days ago"
               }
             ],
             "thresholds": []
@@ -154,7 +154,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT min(400 - numeric(timeLeft)) as 'Fastest Time (Seconds)' where playerCompany != 'New Relic' and gameEvent = 'completedLevel' since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT min(400 - numeric(timeLeft)) as 'Fastest Time (Seconds)' where playerCompany != 'New Relic' and gameEvent = 'completedLevel' since 2 days ago"
               }
             ],
             "thresholds": []
@@ -168,32 +168,8 @@
           "layout": {
             "column": 3,
             "row": 5,
-            "height": 3,
-            "width": 2
-          },
-          "title": "High Score (time * 100 + coins * 200) : TOP 3 TO WIN",
-          "rawConfiguration": {
-            "facet": {
-              "showOtherSeries": false
-            },
-            "nrqlQueries": [
-              {
-                "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany, playerName since 8 hours ago"
-              }
-            ]
-          },
-          "linkedEntityGuids": null
-        },
-        {
-          "visualization": {
-            "id": "viz.bar"
-          },
-          "layout": {
-            "column": 5,
-            "row": 5,
-            "height": 3,
-            "width": 2
+            "height": 5,
+            "width": 3
           },
           "title": "Completed level with most time remaining",
           "rawConfiguration": {
@@ -203,7 +179,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany, playerName since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerName, playerCompany since 2 days ago"
               }
             ]
           },
@@ -214,10 +190,10 @@
             "id": "viz.bar"
           },
           "layout": {
-            "column": 7,
+            "column": 6,
             "row": 5,
-            "height": 3,
-            "width": 2
+            "height": 5,
+            "width": 3
           },
           "title": "Most coins collected",
           "rawConfiguration": {
@@ -227,7 +203,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany, playerName since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT max(numeric(totalCoins)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet  playerName, playerCompany since 2 days ago"
               }
             ]
           },
@@ -240,7 +216,7 @@
           "layout": {
             "column": 9,
             "row": 5,
-            "height": 3,
+            "height": 5,
             "width": 4
           },
           "title": "High Score - Last Hour",
@@ -266,11 +242,11 @@
           },
           "layout": {
             "column": 1,
-            "row": 8,
-            "height": 3,
-            "width": 4
+            "row": 7,
+            "height": 8,
+            "width": 2
           },
-          "title": "Avg Time by Company",
+          "title": "High Score (time * 100 + coins * 200) : TOP 3 TO WIN",
           "rawConfiguration": {
             "facet": {
               "showOtherSeries": false
@@ -278,7 +254,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT average(400 - numeric(timeLeft)) as seconds where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT max(numeric(timeLeft)*100 + numeric(totalCoins)*200) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet  playerName, playerCompany since 2 days ago"
               }
             ]
           },
@@ -289,10 +265,10 @@
             "id": "viz.bar"
           },
           "layout": {
-            "column": 5,
-            "row": 8,
+            "column": 3,
+            "row": 10,
             "height": 3,
-            "width": 4
+            "width": 3
           },
           "title": "Avg Coins collected by Company",
           "rawConfiguration": {
@@ -302,7 +278,31 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT average(numeric(totalCoins)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT average(numeric(totalCoins)) where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
+              }
+            ]
+          },
+          "linkedEntityGuids": null
+        },
+        {
+          "visualization": {
+            "id": "viz.bar"
+          },
+          "layout": {
+            "column": 6,
+            "row": 10,
+            "height": 3,
+            "width": 3
+          },
+          "title": "Avg Time by Company",
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "accountId": 3400472,
+                "query": "FROM SuperMarioStats SELECT average(400 - numeric(timeLeft)) as seconds where playerCompany != 'New Relic' and gameEvent = 'completedLevel' facet playerCompany since 2 days ago"
               }
             ]
           },
@@ -314,7 +314,7 @@
           },
           "layout": {
             "column": 9,
-            "row": 8,
+            "row": 10,
             "height": 3,
             "width": 4
           },
@@ -326,7 +326,7 @@
             "nrqlQueries": [
               {
                 "accountId": 3400472,
-                "query": "FROM SuperMarioStats SELECT uniqueCount(playerId) where playerCompany != 'New Relic' and (gameEvent = 'death' OR gameEvent = 'completedLevel')  facet gameEvent since 8 hours ago"
+                "query": "FROM SuperMarioStats SELECT uniqueCount(playerId) where playerCompany != 'New Relic' and (gameEvent = 'death' OR gameEvent = 'completedLevel')  facet gameEvent since 2 days ago"
               }
             ]
           },
