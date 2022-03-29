@@ -41,17 +41,21 @@ setx GAME_TITLE "- New Relic SKO Demo -"
 
 ## During the Conference
 
--   Double clicking on the `StartServer.cmd` file to start listening for events (only need to do this once)
 -   Plug in the USB controller
+-   Double clicking on the `StartServer.cmd` file to start listening for events (only need to do this once)
+-   Double clicking on the `starthere.exe` file. They will be prompted to enter their name, email and company name (only need to do this once)
 -   Explain the rules to the attendees:
     -   They have only 1 life, if they die, it's game over
-    -   Prize will be given to top 3 players who completed the level the fastest
-    -   A different prize will be given to top 3 players who completed the level within 1/2 of the time (200 Seconds) and collected most Coins
--   Double clicking on the `starthere.exe` file. They will be prompted to enter their name, email and company name
+    -   Prize will be given to top 3 players who completed the level the fastest AND at the same time, collect the most coins
 -   Game will start after they provided those information (user will need to press the `Start` button on the controller)
 -   Coins collected and Time remaining stats will be pushed to New Relic and the dashboard should show updates every 5 seconds
 -   When user dies or completed the level, the Emulator will be closed and `completed.exe` will be launched automatically (by Python)
 -   A dialog will appear thanking user for playing. Click any button will launch `starthere.exe` automatically and the next player can start
+-   Open New Relic dashboard on Chrome and install this extension https://chrome.google.com/webstore/detail/lmilalhkkdhfieeienjbiicclobibjao to force the page to refresh every 30 seconds (we have to do this because the leaderboard chart will only refresh once every 24 minutes, because the date range is since 1 day ago)
+
+```javascript
+setInterval(() => { window.location.reload(); }, 30000)
+```
 
 ## Notes
 

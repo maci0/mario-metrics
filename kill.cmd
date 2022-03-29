@@ -1,0 +1,1 @@
+taskkill /im starthere.exe /f

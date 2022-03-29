@@ -16,32 +16,26 @@ GUID()
    SetFormat Integer, %format%      ; restore original format 
    h := SubStr(h,1,8) . "-" . SubStr(h,9,4) . "-" . SubStr(h,13,4) . "-" . SubStr(h,17,4) . "-" . SubStr(h,21,12)
    return h
-} 
+}
 
 Start:
-InputBox, _name, Your Name, Please enter your name., DONTHIDE, 320, 110
+InputBox, _name, Next Player, Please enter your name. Press Enter to continue, DONTHIDE, 350, 130
 
-if ErrorLevel
-    Exit
-
-
-if !_name
+if ErrorLevel or !_name
 {
     MsgBox, Name is required
     Goto, Start
 }
-    
+
 if !RegExMatch(_name, "^[a-z ,A-Z'.]+$") {
     MsgBox, Invalid characters in name
-    Exit
+    Goto, Start
 }
 
 Email:
-InputBox, _email, Your Email Address, Please enter your email address. We will send you an email if you win a prize, DONTHIDE, 320, 160
-if ErrorLevel
-    Exit
+InputBox, _email, Your Email, Please enter your email address. We will send you an email if you win a prize, DONTHIDE, 320, 150
 
-if !_email
+if ErrorLevel or !_email
 {
     MsgBox, Email is required
     Goto, Email
@@ -51,13 +45,11 @@ if !RegExMatch(_email, "^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$") {
     MsgBox, Invalid Email Address
     Goto, Email
 }
-    
-Company:
-InputBox, _company, Your Company, Please enter your company name., DONTHIDE, 320, 110
-if ErrorLevel
-    Exit
 
-if !_email
+Company:
+InputBox, _company, Your Company, Please enter your company name., DONTHIDE, 320, 150
+
+if ErrorLevel or !_company
 {
     MsgBox, Company is required
     Goto, Company
@@ -75,5 +67,5 @@ FileAppend, %guid%`n, %APPDATA%\player.ini
 
 Run, Mesen.exe /fullscreen smb.nes mesen.lua
 
-Sleep, 2100
+Sleep, 2200
 Run, sendkeys.bat "Mesen - smb" "", , Hide
